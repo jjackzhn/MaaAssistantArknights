@@ -184,7 +184,9 @@
         "algorithm": "OcrDetect",
         "action": "DoNothing",
         "text": ["22+"],
-        "ocrReplace": [["(2[2-9]|[3-9]\\d+)", "22+"]],
+        "ocrReplace": [
+            ["(2[2-9]|[3-9]\\d+)", "22+"]
+        ],
         "roi": [1200, 490, 80, 50],
         "next": ["RelaunchAnchor@RA@RA1-DeployOperatorSwipe"]
     },
@@ -249,7 +251,9 @@
         "algorithm": "OcrDetect",
         "action": "ClickSelf",
         "text": ["交付木材8+"],
-        "ocrReplace": [["(8|9|[0-68-9]{2,3}).*5", "交付木材8+"]],
+        "ocrReplace": [
+            ["(8|9|[0-68-9]{2,3}).*5", "交付木材8+"]
+        ],
         "roi": [170, 235, 50, 35],
         "next": ["RelaunchAnchor@RA@RA1-WaitWoodDialogue"]
     },
@@ -554,7 +558,9 @@
         "algorithm": "OcrDetect",
         "action": "ClickSelf",
         "text": ["40+"],
-        "ocrReplace": [["([2-4]O|[2-4]\\d+)", "40+"]],
+        "ocrReplace": [
+            ["([2-4]O|[2-4]\\d+)", "40+"]
+        ],
         "roi": [1008, 330, 25, 24],
         "next": ["RelaunchAnchor@RA@RA4-EW-Mod"]
     },
@@ -751,7 +757,9 @@
         "algorithm": "OcrDetect",
         "action": "DoNothing",
         "text": ["20+"],
-        "ocrReplace": [["[2-9]\\d+", "20+"]],
+        "ocrReplace": [
+            ["[2-9]\\d+", "20+"]
+        ],
         "roi": [1200, 490, 80, 50],
         "next": ["RelaunchAnchor@RA@RA4-ClickStone2"]
     },
@@ -926,9 +934,9 @@
         "next": ["RelaunchAnchor@RA@RA4-ConfirmMission2", "#self"]
     },
     "RelaunchAnchor@RA@RA4-ConfirmMission2": {
-        "doc": "步骤 42：OCR 识别 <确认> 并点击",
+        "doc": "步骤 42：OCR 识别 <确认> 并点击。末尾多加一个 RA4-ClickMission2Done：官方这里只有 [#self, ClickMission2] 两个候选，两个都识别不到时 MAA 会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测就这么死的）。模板兜底是必定能判定的（有勾=0.98~1.00 / 无勾=0.18~0.41），所以候选表不会再耗尽",
         "baseTask": "RelaunchAnchor@RA@Common-Confirm",
-        "next": ["#self", "RelaunchAnchor@RA@RA4-ClickMission2"]
+        "next": ["#self", "RelaunchAnchor@RA@RA4-ClickMission2", "RelaunchAnchor@RA@RA4-ClickMission2Done"]
     },
     "RelaunchAnchor@RA@RA4-ClickMission2": {
         "doc": "步骤 43：OCR 识别 <发现清澈水> 并点击",
@@ -975,7 +983,13 @@
         "action": "ClickRect",
         "specificRect": [670, 400, 1, 1],
         "preDelay": 500,
-        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-WaitEWSkill*20"],
+        "reduceOtherTimes": [
+            "RelaunchAnchor@RA@RA4-WaitEWSkill*20",
+            "RelaunchAnchor@RA@RA4-WaitMission3*200",
+            "RelaunchAnchor@RA@RA4-ClickMission3*130",
+            "RelaunchAnchor@RA@RA4-EWRecastTick*130",
+            "RelaunchAnchor@RA@RA4-EWCheckTap*1"
+        ],
         "next": ["RelaunchAnchor@RA@RA4-WaitEWSkill"]
     },
     "RelaunchAnchor@RA@RA4-WaitEWSkill": {
@@ -995,17 +1009,27 @@
         "next": ["RelaunchAnchor@RA@RA4-WaitMission3"]
     },
     "RelaunchAnchor@RA@RA4-WaitMission3": {
-        "doc": "步骤 51 前等待任务完成",
+        "doc": "步骤 51 前等待任务完成：任务条目连点保持官方原样（结算节奏不变）；重放检查有两条触发路径 —— ① RA4-ClickMission3 每 130 次点击（≈88s）跳出一次（条目可识别时）② RA4-EWRecastTick 每 130 圈（≈85s）触发一次（条目被技能面板盖住时，ClickMission3 不再命中，只有这里能推进）。maxTimes 从 600 降到 200（≈130s）：这个计数只在『任务条目读不到』时才涨（正常长回合条目一直可读，不走这里），所以它衡量的是『界面已经不认识但 MAA 还在等』的时长；200 让「建設中断」这类失败界面快 3 倍被兜底探针接管",
         "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
-        "next": ["RelaunchAnchor@RA@RA4-SettleNow", "RelaunchAnchor@RA@RA4-ClickMission3", "#self"]
+        "next": [
+            "RelaunchAnchor@RA@RA4-SettleNow",
+            "RelaunchAnchor@RA@RA4-UseEWSkillAgain",
+            "RelaunchAnchor@RA@RA4-EWRecastTick",
+            "RelaunchAnchor@RA@RA4-ClickMission3",
+            "#self"
+        ],
+        "maxTimes": 200,
+        "exceededNext": ["RelaunchAnchor@RA@RA4-MissionTimeoutProbe"]
     },
     "RelaunchAnchor@RA@RA4-ClickMission3": {
-        "doc": "步骤 51：OCR 识别 <累计击败领袖敌人> 并点击",
+        "doc": "步骤 51：OCR 识别 <累计击败领袖敌人> 并点击。连续点击保持官方行为，但每 130 次（≈88s，只有真·长回合才到得了）跳出一次去做【补点一次任务条目 → 复位计数 → 读面板 READY，必要时补点 EW 开面板】；计数用任务自身的 exec_times，不受『连点是否一直命中』影响",
         "algorithm": "OcrDetect",
         "action": "ClickSelf",
         "text": ["累计", "击败", "领袖", "敌人"],
         "roi": [80, 231, 205, 27],
-        "next": ["#self", "RelaunchAnchor@RA@RA4-WaitMission3"]
+        "next": ["#self", "RelaunchAnchor@RA@RA4-WaitMission3"],
+        "maxTimes": 130,
+        "exceededNext": ["RelaunchAnchor@RA@RA4-MissionClaimOnce", "RelaunchAnchor@RA@RA4-EWCheckReset"]
     },
     "RelaunchAnchor@RA@RA4-SettleNow": {
         "doc": "步骤 52：OCR 识别 <立即结算> 并点击",
@@ -1013,9 +1037,9 @@
         "next": ["#self", "RelaunchAnchor@RA@RA4-WaitContinueAfterSettlement"]
     },
     "RelaunchAnchor@RA@RA4-WaitContinueAfterSettlement": {
-        "doc": "步骤 53 前等待结算完成",
+        "doc": "步骤 53 前等待结算完成。第一个候选是 RA4-DataSyncDismiss：游戏偶发弹「データが更新されました。データ同期を行います」模态框时，官方这里是无上限空转（2026-11-01 13:15 实测卡了 39 分钟、MAA 日志冻结），必须先点掉它，否则永远走不到「点击继续」",
         "algorithm": "JustReturn",
-        "next": ["RelaunchAnchor@RA@RA4-ContinueAfterSettlement", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-DataSyncDismiss", "RelaunchAnchor@RA@RA4-ContinueAfterSettlement", "#self"]
     },
     "RelaunchAnchor@RA@RA4-ContinueAfterSettlement": {
         "doc": "步骤 53：OCR 识别 <点击继续> 并点击",
@@ -1258,7 +1282,9 @@
         "algorithm": "OcrDetect",
         "action": "ClickSelf",
         "text": ["45+"],
-        "ocrReplace": [["(4[5-9]|[5-9]\\d+)", "45+"]],
+        "ocrReplace": [
+            ["(4[5-9]|[5-9]\\d+)", "45+"]
+        ],
         "roi": [934, 331, 26, 22],
         "next": ["RelaunchAnchor@RA@RA15-CX-Mod"]
     },
@@ -1369,7 +1395,9 @@
         "algorithm": "OcrDetect",
         "action": "DoNothing",
         "text": ["24+"],
-        "ocrReplace": [["(2[4-9]|[3-9]\\d+)", "24+"]],
+        "ocrReplace": [
+            ["(2[4-9]|[3-9]\\d+)", "24+"]
+        ],
         "roi": [1198, 495, 75, 43],
         "next": ["RelaunchAnchor@RA@RA15-DeployCX"]
     },
@@ -1461,5 +1489,85 @@
         "doc": "步骤 27.5：OCR 识别 <完成建设> 并点击",
         "baseTask": "RelaunchAnchor@RA@RA1-FinishConstruction",
         "next": ["RelaunchAnchor@RA@RA15-Prepare", "#self"]
+    },
+    "RelaunchAnchor@RA@RA4-UseEWSkillAgain": {
+        "doc": "步骤 50.2（技能重放）：OCR 识别面板 <READY> 后再次开启 EW 技能，只点技能按钮、不点干员（面板若正好还选中，这一步就是零点击重放）",
+        "baseTask": "RelaunchAnchor@RA@RA4-UseEWSkill"
+    },
+    "RelaunchAnchor@RA@RA4-MissionClaimOnce": {
+        "doc": "步骤 51.05：跳出连点做检查前先补点一次任务条目（检查动作不拖慢结算），只点一次就进入复位+读面板；文本/roi 继承 baseTask（JP 覆盖为 [敵,ボス,撃破]）",
+        "baseTask": "RelaunchAnchor@RA@RA4-ClickMission3",
+        "maxTimes": 2147483647,
+        "next": ["RelaunchAnchor@RA@RA4-EWCheckReset"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-EWCheckReset"]
+    },
+    "RelaunchAnchor@RA@RA4-EWRecastTick": {
+        "doc": "步骤 51.4（空转节拍器）：任务条目 OCR 失败时 WaitMission3 每圈加 1，next 先回 ClickMission3（行为与官方一致），末尾带 WaitMission3 兜底（条目被面板盖住时 ClickMission3 会失败，列表里若只剩它会重试 20 次后 SubTaskError 掐掉整条链）；攒满 130 圈（≈85s）就做一次检查。130 这个量级是刻意选的：正常回合只有 14 次连点、短回合也不会到，只有真·长回合才会触发（避免过早补点 EW 把任务条目盖住而拖慢结算）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "next": ["RelaunchAnchor@RA@RA4-ClickMission3", "RelaunchAnchor@RA@RA4-WaitMission3"],
+        "maxTimes": 130,
+        "exceededNext": ["RelaunchAnchor@RA@RA4-EWCheckReset"]
+    },
+    "RelaunchAnchor@RA@RA4-EWCheckReset": {
+        "doc": "步骤 51.2（检查）：先复位计数，然后 ① 直接读面板 READY（若面板已经开着，比如上一次检查开过，这里就零点击命中）② 读不到才补点一次 EW 把面板打开（RA4-EWCheckTap，每回合限一次）③ 再读 5 次 ④ 仍读不到就回等待循环 —— 面板留着不动，等待循环里每圈都会再读 READY，技能一好就会放。next 末尾必须有 WaitMission3 兜底，否则 READY 读不到时 MAA 会重试 20 次并 SubTaskError 掐掉整条任务链（实测 11:50:55）",
+        "algorithm": "JustReturn",
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-ClickMission3*130", "RelaunchAnchor@RA@RA4-EWRecastTick*130"],
+        "next": [
+            "RelaunchAnchor@RA@RA4-UseEWSkillAgain",
+            "RelaunchAnchor@RA@RA4-EWCheckTap",
+            "RelaunchAnchor@RA@RA4-WaitMission3"
+        ]
+    },
+    "RelaunchAnchor@RA@RA4-EWCheckTap": {
+        "doc": "步骤 51.25（开面板）：补点一次 EW（就是官方 RA4-ClickEW 的坐标）把技能面板打开 —— 面板开着时 READY 才读得到。代价是面板会盖住左侧任务条目，所以：只在长回合（≈90s）才会走到，且每回合最多点一次（maxTimes=1，由 RA4-ClickEW 每回合复位）",
+        "baseTask": "RelaunchAnchor@RA@RA4-ClickEW",
+        "maxTimes": 1,
+        "exceededNext": ["RelaunchAnchor@RA@RA4-WaitMission3"],
+        "next": ["RelaunchAnchor@RA@RA4-EWPanelRead"]
+    },
+    "RelaunchAnchor@RA@RA4-EWPanelRead": {
+        "doc": "步骤 51.3（读面板）：补点 EW 后连续读 5 次 READY（≈1s），读到就放技能（放完面板会自动收起，任务条目恢复可点）；读不到就回等待循环，面板继续开着等技能冷却好 —— 等待循环每圈都会再读一次 READY，所以不会漏",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 150,
+        "next": ["RelaunchAnchor@RA@RA4-UseEWSkillAgain", "RelaunchAnchor@RA@RA4-WaitMission3"],
+        "maxTimes": 5,
+        "exceededNext": ["RelaunchAnchor@RA@RA4-WaitMission3"]
+    },
+    "RelaunchAnchor@RA@RA4-MissionTimeoutProbe": {
+        "doc": "步骤 51.9（兜底探针）：等待超时后探测结算/中止界面；出现就接管（含「建設中断」界面的「▼ タップして進む」），也先让 RA4-DataSyncDismiss 处理数据同步模态框；都不匹配就重置计数回到等待循环，避免旧版的永久空转死机",
+        "algorithm": "JustReturn",
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-WaitMission3*200"],
+        "next": [
+            "RelaunchAnchor@RA@RA4-DataSyncDismiss",
+            "RelaunchAnchor@RA@RA4-SettleNow",
+            "RelaunchAnchor@RA@RA4-ContinueAfterSettlement",
+            "RelaunchAnchor@RA@RA4-WaitMission3"
+        ]
+    },
+    "RelaunchAnchor@RA@RA4-DataSyncDismiss": {
+        "doc": "步骤 53.05（未知模态框兜底）：OCR 命中游戏自己弹的「データが更新されました。データ同期を行います」就点掉中间那个勾。文本用日文直接写在基础文件里：别的客户端匹配不到就只是惰性候选，不会误触发；要求同一段文字里同时出现「データ」和「更新」，普通结算画面不会误判。点完回到等待循环，若界面还在就继续点（点不动也无害）。坐标实测自 2026-11-01 13:15 的抓帧：勾的圆心 = 截图 (960,737) → MAA (640,491)；文字带 = 截图 x534..1386 / y480..516 → MAA [356,320,568,24]",
+        "algorithm": "OcrDetect",
+        "action": "ClickRect",
+        "text": ["データ", "更新"],
+        "roi": [355, 320, 260, 28],
+        "specificRect": [630, 481, 21, 21],
+        "next": ["#self", "RelaunchAnchor@RA@RA4-ContinueAfterSettlement"]
+    },
+    "RelaunchAnchor@RA@RA4-ClickMission2Done": {
+        "doc": "步骤 43.5（OCR 误读兜底）：点掉左侧『已完成但没领取』的任务条目。官方 RA4-ClickMission2 靠 OCR（JP 覆写 [マップ,探索,水場]），而在『已完成』渲染下 OCR 会稳定读成 マツア/マッア/マツラ…（2026-11-02 23:25 连续 13 秒 20 次全是误读，score 0.58~0.80，一次 マップ 都没出现），候选表耗尽 → SubTaskError → 整条 Reclamation 任务链死掉。这里改成模板匹配条目左侧的『已完成勾选框』（30x28；模板自测：命中 0.98~1.00，普通战斗画面 0.18~0.41，阈值 0.85），命中后按官方坐标点条目正文，再回到官方的 RA4-WaitMissionPlot",
+        "algorithm": "MatchTemplate",
+        "template": "RelaunchAnchor@RA@RA4MissionDone.png",
+        "templThreshold": 0.85,
+        "roi": [30, 222, 140, 62],
+        "action": "ClickRect",
+        "specificRect": [160, 242, 1, 1],
+        "next": ["RelaunchAnchor@RA@RA4-WaitMissionPlot", "#self"]
+    },
+    "RelaunchAnchor@RA@RA4-AbortUnrecognized": {
+        "doc": "步骤 99（有意报错，自动生成）：容错闸门重试到头仍识别不到界面时，故意让它永远匹配不上 → MAA 报 SubTaskError 停下任务链（与官方原本的一致：失败要能看见，不要静默空转）。日志里 SubTaskError 的 pre_task 指向上游闸门名，即可定位是哪一步失败",
+        "algorithm": "OcrDetect",
+        "action": "ClickSelf",
+        "text": ["RA4-ABORT-NEVER-MATCHES"],
+        "roi": [0, 0, 2, 2]
     }
 }
