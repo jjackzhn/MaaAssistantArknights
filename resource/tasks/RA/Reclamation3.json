@@ -7,7 +7,12 @@
     "RelaunchAnchor@RA@RA4-Entry": {
         "doc": "RA-4 入口：兼容关卡列表与已进入关卡后的不同起始界面",
         "algorithm": "JustReturn",
-        "next": ["RelaunchAnchor@RA@RA4-Prepare", "RelaunchAnchor@RA@RA4-OpenConstruction"]
+        "next": [
+            "RelaunchAnchor@RA@RA4-Prepare",
+            "RelaunchAnchor@RA@RA4-OpenConstruction",
+            "RelaunchAnchor@RA@RA4-Gate-RA4-Entry"
+        ],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-Entry*40"]
     },
     "RelaunchAnchor@RA@RA15-Entry": {
         "doc": "RA-15 入口：兼容关卡列表与已进入关卡后的不同起始界面",
@@ -451,25 +456,34 @@
         "useRaw": false,
         "binThreshold": [200, 255],
         "roi": [610, 390, 61, 15],
-        "next": ["RelaunchAnchor@RA@RA4-OpenConstruction", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-OpenConstruction", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-Prepare"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-Prepare*40"]
     },
     "RelaunchAnchor@RA@RA4-OpenConstruction": {
         "doc": "步骤 2：OCR 识别 <开启建设> 并点击；未出现则回到步骤 1 重新点击 RA-4",
         "baseTask": "RelaunchAnchor@RA@Common-OpenConstruction",
-        "next": ["RelaunchAnchor@RA@RA4-ChooseStrategy", "#self", "RelaunchAnchor@RA@RA4-Prepare"]
+        "next": [
+            "RelaunchAnchor@RA@RA4-ChooseStrategy",
+            "#self",
+            "RelaunchAnchor@RA@RA4-Prepare",
+            "RelaunchAnchor@RA@RA4-Gate-RA4-OpenConstruction"
+        ],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-OpenConstruction*40"]
     },
     "RelaunchAnchor@RA@RA4-ChooseStrategy": {
         "doc": "步骤 3：OCR 识别 <筹划经营> 并点击",
         "baseTask": "RelaunchAnchor@RA@RA1-ChooseStrategy",
         "text": ["筹划", "划经", "经营"],
         "roi": [376, 383, 96, 29],
-        "next": ["#self", "RelaunchAnchor@RA@RA4-ConfirmSelection"]
+        "next": ["#self", "RelaunchAnchor@RA@RA4-ConfirmSelection", "RelaunchAnchor@RA@RA4-Gate-RA4-ChooseStrategy"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ChooseStrategy*40"]
     },
     "RelaunchAnchor@RA@RA4-ConfirmSelection": {
         "doc": "步骤 4：OCR 识别 <确认选择> 并点击",
         "baseTask": "RelaunchAnchor@RA@RA1-ConfirmSelection",
         "postDelay": 500,
-        "next": ["RelaunchAnchor@RA@RA4-Choose", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-Choose", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmSelection"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmSelection*40"]
     },
     "RelaunchAnchor@RA@RA4-Choose": {
         "doc": "步骤 5：OCR 识别 <干员招募> 并点击",
@@ -478,7 +492,13 @@
         "text": ["干员招募", "员招", "招募"],
         "roi": [941, 131, 131, 34],
         "postDelay": 500,
-        "next": ["RelaunchAnchor@RA@RA4-ExamineEWExistence", "RelaunchAnchor@RA@RA4-ExamineEWExistence2", "#self"]
+        "next": [
+            "RelaunchAnchor@RA@RA4-ExamineEWExistence",
+            "RelaunchAnchor@RA@RA4-ExamineEWExistence2",
+            "#self",
+            "RelaunchAnchor@RA@RA4-Gate-RA4-Choose"
+        ],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-Choose*40"]
     },
     "RelaunchAnchor@RA@RA4-ExamineEWExistence2": {
         "doc": "步骤 5.1：OCR 识别 <编入干员> ",
@@ -486,7 +506,8 @@
         "action": "DoNothing",
         "text": ["编入", "入干", "干员"],
         "roi": [834, 488, 94, 39],
-        "next": ["RelaunchAnchor@RA@RA4-AddHelp"]
+        "next": ["RelaunchAnchor@RA@RA4-AddHelp", "RelaunchAnchor@RA@RA4-Gate-RA4-ExamineEWExistence2"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ExamineEWExistence2*40"]
     },
     "RelaunchAnchor@RA@RA4-AddHelp": {
         "doc": "步骤 5.2：OCR 识别 <选择助战> 并点击",
@@ -511,15 +532,18 @@
             "RelaunchAnchor@RA@RA4-EW5",
             "RelaunchAnchor@RA@RA4-EW6",
             "RelaunchAnchor@RA@RA4-EW7",
-            "RelaunchAnchor@RA@RA4-EW8"
-        ]
+            "RelaunchAnchor@RA@RA4-EW8",
+            "RelaunchAnchor@RA@RA4-Gate-RA4-ChooseType"
+        ],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ChooseType*40"]
     },
     "RelaunchAnchor@RA@RA4-EW-Common": {
         "doc": "步骤 5.4：OCR 识别 <维什戴尔> 并点击",
         "algorithm": "OcrDetect",
         "action": "ClickSelf",
         "text": ["维什", "什戴", "戴尔"],
-        "next": ["RelaunchAnchor@RA@RA4-EW-Skill"]
+        "next": ["RelaunchAnchor@RA@RA4-EW-Skill", "RelaunchAnchor@RA@RA4-Gate-RA4-EW-Common"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-EW-Common*40"]
     },
     "RelaunchAnchor@RA@RA4-EW1": {
         "baseTask": "RelaunchAnchor@RA@RA4-EW-Common",
@@ -570,7 +594,8 @@
         "action": "ClickRect",
         "specificRect": [890, 460, 20, 20],
         "postDelay": 200,
-        "next": ["RelaunchAnchor@RA@RA4-EW-ConfirmHelp"]
+        "next": ["RelaunchAnchor@RA@RA4-EW-ConfirmHelp", "RelaunchAnchor@RA@RA4-Gate-RA4-EW-Mod"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-EW-Mod*40"]
     },
     "RelaunchAnchor@RA@RA4-EW-ConfirmHelp": {
         "doc": "步骤 5.7：OCR 识别 <招募助战> 并点击",
@@ -578,7 +603,8 @@
         "action": "ClickSelf",
         "text": ["招募", "募助", "助战"],
         "roi": [740, 580, 140, 40],
-        "next": ["RelaunchAnchor@RA@RA4-ConfirmTeam"]
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmTeam", "RelaunchAnchor@RA@RA4-Gate-RA4-EW-ConfirmHelp"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-EW-ConfirmHelp*40"]
     },
     "RelaunchAnchor@RA@RA4-ExamineEWExistence": {
         "doc": "步骤 6 前OCR 识别 <维什戴尔> ",
@@ -586,7 +612,8 @@
         "action": "DoNothing",
         "text": ["维什", "什戴", "戴尔"],
         "roi": [843, 449, 96, 29],
-        "next": ["RelaunchAnchor@RA@RA4-ConfirmTeam"]
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmTeam", "RelaunchAnchor@RA@RA4-Gate-RA4-ExamineEWExistence"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ExamineEWExistence*40"]
     },
     "RelaunchAnchor@RA@RA4-ConfirmTeam": {
         "doc": "步骤 6：OCR 识别 <确认招募> 并点击",
@@ -594,7 +621,8 @@
         "action": "ClickSelf",
         "text": ["确认招募"],
         "roi": [1088, 657, 110, 33],
-        "next": ["RelaunchAnchor@RA@RA4-ConfirmTeam2", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmTeam2", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmTeam"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmTeam*40"]
     },
     "RelaunchAnchor@RA@RA4-ConfirmTeam2": {
         "doc": "步骤 7：OCR 识别 <确认> 并点击",
@@ -607,8 +635,10 @@
             "RelaunchAnchor@RA@RA4-StartConstruction",
             "#self",
             "RelaunchAnchor@RA@RA4-WaitName",
-            "RelaunchAnchor@RA@RA4-DeployGatheringBasePrompt"
-        ]
+            "RelaunchAnchor@RA@RA4-DeployGatheringBasePrompt",
+            "RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmTeam2"
+        ],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmTeam2*40"]
     },
     "RelaunchAnchor@RA@RA4-StartConstruction": {
         "doc": "步骤 8：OCR 识别 <开始建设> 并点击；未出现则回到步骤 3",
@@ -701,7 +731,8 @@
         "algorithm": "MatchTemplate",
         "template": "RelaunchAnchor@RA@PlotLog.png",
         "roi": [30, 16, 59, 48],
-        "next": ["RelaunchAnchor@RA@RA4-UseRedGold", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-UseRedGold", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-SkillPlot"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-SkillPlot*40"]
     },
     "RelaunchAnchor@RA@RA4-UseRedGold": {
         "doc": "步骤 16：使用赤金开区域",
@@ -709,7 +740,8 @@
         "text": ["粗制", "赤金", "制赤"],
         "roi": [1135, 240, 82, 32],
         "action": "ClickSelf",
-        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-UseRedGold"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-UseRedGold*40"]
     },
     "RelaunchAnchor@RA@RA4-UseRedPlot": {
         "doc": "步骤 17：点击开区域后剧情",
@@ -726,7 +758,8 @@
         "doc": "步骤 18：点击剧情",
         "baseTask": "RelaunchAnchor@RA@RA4-SkillPlot",
         "template": "RelaunchAnchor@RA@PlotLog.png",
-        "next": ["#self", "RelaunchAnchor@RA@RA4-WaitSwipeMap"]
+        "next": ["#self", "RelaunchAnchor@RA@RA4-WaitSwipeMap", "RelaunchAnchor@RA@RA4-Gate-RA4-ClickPlot"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ClickPlot*40"]
     },
     "RelaunchAnchor@RA@RA4-WaitSwipeMap-Common": {
         "doc": "过剧情准备滑动地图",
@@ -792,18 +825,21 @@
         "algorithm": "MatchTemplate",
         "template": "RelaunchAnchor@RA@PlotLog.png",
         "roi": [30, 16, 59, 48],
-        "next": ["RelaunchAnchor@RA@RA4-UseRedGold2", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-UseRedGold2", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-SkillPlot2"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-SkillPlot2*40"]
     },
     "RelaunchAnchor@RA@RA4-UseRedGold2": {
         "doc": "步骤 24：使用赤金开区域",
         "baseTask": "RelaunchAnchor@RA@RA4-UseRedGold",
-        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot2", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot2", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-UseRedGold2"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-UseRedGold2*40"]
     },
     "RelaunchAnchor@RA@RA4-UseRedPlot2": {
         "doc": "步骤 25：点击开区域后剧情",
         "baseTask": "RelaunchAnchor@RA@RA4-SkillPlot",
         "template": "RelaunchAnchor@RA@PlotLog.png",
-        "next": ["#self", "RelaunchAnchor@RA@RA4-WaitSwipeMap2"]
+        "next": ["#self", "RelaunchAnchor@RA@RA4-WaitSwipeMap2", "RelaunchAnchor@RA@RA4-Gate-RA4-UseRedPlot2"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-UseRedPlot2*40"]
     },
     "RelaunchAnchor@RA@RA4-WaitSwipeMap2": {
         "doc": "步骤 26 前过剧情准备滑动地图",
@@ -845,18 +881,21 @@
         "doc": "步骤 29：点击技能剧情",
         "baseTask": "RelaunchAnchor@RA@RA4-SkillPlot",
         "template": "RelaunchAnchor@RA@PlotLog.png",
-        "next": ["RelaunchAnchor@RA@RA4-UseRedGold3", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-UseRedGold3", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-SkillPlot3"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-SkillPlot3*40"]
     },
     "RelaunchAnchor@RA@RA4-UseRedGold3": {
         "doc": "步骤 30：使用赤金开区域",
         "baseTask": "RelaunchAnchor@RA@RA4-UseRedGold",
-        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot3", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot3", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-UseRedGold3"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-UseRedGold3*40"]
     },
     "RelaunchAnchor@RA@RA4-UseRedPlot3": {
         "doc": "步骤 31：点击开区域后剧情",
         "baseTask": "RelaunchAnchor@RA@RA4-SkillPlot",
         "template": "RelaunchAnchor@RA@PlotLog.png",
-        "next": ["#self", "RelaunchAnchor@RA@RA4-WaitSwipeMap3"]
+        "next": ["#self", "RelaunchAnchor@RA@RA4-WaitSwipeMap3", "RelaunchAnchor@RA@RA4-Gate-RA4-UseRedPlot3"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-UseRedPlot3*40"]
     },
     "RelaunchAnchor@RA@RA4-WaitSwipeMap3": {
         "doc": "步骤 32：前过剧情准备滑动地图",
@@ -888,14 +927,16 @@
     "RelaunchAnchor@RA@RA4-DeployOperatorWait": {
         "doc": "步骤 35：部署干员后的占位等待 x 秒",
         "algorithm": "JustReturn",
-        "next": ["RelaunchAnchor@RA@RA4-MissionIcon"]
+        "next": ["RelaunchAnchor@RA@RA4-MissionIcon", "RelaunchAnchor@RA@RA4-Gate-RA4-DeployOperatorWait"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-DeployOperatorWait*40"]
     },
     "RelaunchAnchor@RA@RA4-MissionIcon": {
         "doc": "步骤 36：模板匹配任务图标并点击",
         "baseTask": "RelaunchAnchor@RA@Common-MissionIcon",
         "algorithm": "MatchTemplate",
         "template": "RelaunchAnchor@RA@MissionIcon.png",
-        "next": ["RelaunchAnchor@RA@RA4-Mission", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-Mission", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-MissionIcon"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-MissionIcon*40"]
     },
     "RelaunchAnchor@RA@RA4-Mission": {
         "doc": "步骤 37：OCR 识别 <全新区域> 并点击",
@@ -903,12 +944,14 @@
         "action": "ClickSelf",
         "text": ["全新", "新区", "区域"],
         "roi": [654, 283, 83, 28],
-        "next": ["RelaunchAnchor@RA@RA4-ConfirmMission", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmMission", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-Mission"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-Mission*40"]
     },
     "RelaunchAnchor@RA@RA4-ConfirmMission": {
         "doc": "步骤 38：OCR 识别 <确认> 并点击",
         "baseTask": "RelaunchAnchor@RA@Common-Confirm",
-        "next": ["#self", "RelaunchAnchor@RA@RA4-ClickMission"]
+        "next": ["#self", "RelaunchAnchor@RA@RA4-ClickMission", "RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmMission"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmMission*40"]
     },
     "RelaunchAnchor@RA@RA4-ClickMission": {
         "doc": "步骤 39：OCR 识别 <全新区域> 并点击",
@@ -916,14 +959,16 @@
         "action": "ClickSelf",
         "text": ["全新", "新区", "区域"],
         "roi": [159, 232, 76, 23],
-        "next": ["RelaunchAnchor@RA@RA4-MissionIcon2"]
+        "next": ["RelaunchAnchor@RA@RA4-MissionIcon2", "RelaunchAnchor@RA@RA4-Gate-RA4-ClickMission"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ClickMission*40"]
     },
     "RelaunchAnchor@RA@RA4-MissionIcon2": {
         "doc": "步骤 40：模板匹配任务图标并点击",
         "baseTask": "RelaunchAnchor@RA@Common-MissionIcon",
         "algorithm": "MatchTemplate",
         "template": "RelaunchAnchor@RA@MissionIcon.png",
-        "next": ["RelaunchAnchor@RA@RA4-Mission2", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-Mission2", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-MissionIcon2"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-MissionIcon2*40"]
     },
     "RelaunchAnchor@RA@RA4-Mission2": {
         "doc": "步骤 41：OCR 识别 <清澈水域> 并点击",
@@ -931,12 +976,19 @@
         "action": "ClickSelf",
         "text": ["清澈", "水域", "澈水"],
         "roi": [669, 284, 83, 26],
-        "next": ["RelaunchAnchor@RA@RA4-ConfirmMission2", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmMission2", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-Mission2"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-Mission2*40"]
     },
     "RelaunchAnchor@RA@RA4-ConfirmMission2": {
         "doc": "步骤 42：OCR 识别 <确认> 并点击。末尾多加一个 RA4-ClickMission2Done：官方这里只有 [#self, ClickMission2] 两个候选，两个都识别不到时 MAA 会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测就这么死的）。模板兜底是必定能判定的（有勾=0.98~1.00 / 无勾=0.18~0.41），所以候选表不会再耗尽",
         "baseTask": "RelaunchAnchor@RA@Common-Confirm",
-        "next": ["#self", "RelaunchAnchor@RA@RA4-ClickMission2", "RelaunchAnchor@RA@RA4-ClickMission2Done"]
+        "next": [
+            "#self",
+            "RelaunchAnchor@RA@RA4-ClickMission2",
+            "RelaunchAnchor@RA@RA4-ClickMission2Done",
+            "RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmMission2"
+        ],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmMission2*40"]
     },
     "RelaunchAnchor@RA@RA4-ClickMission2": {
         "doc": "步骤 43：OCR 识别 <发现清澈水> 并点击",
@@ -955,14 +1007,16 @@
         "doc": "步骤 45：点击任务剧情",
         "baseTask": "RelaunchAnchor@RA@RA4-SkillPlot",
         "template": "RelaunchAnchor@RA@PlotLog.png",
-        "next": ["RelaunchAnchor@RA@RA4-MissionIcon3", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-MissionIcon3", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-MissionPlot"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-MissionPlot*40"]
     },
     "RelaunchAnchor@RA@RA4-MissionIcon3": {
         "doc": "步骤 46：模板匹配任务图标并点击",
         "baseTask": "RelaunchAnchor@RA@Common-MissionIcon",
         "algorithm": "MatchTemplate",
         "template": "RelaunchAnchor@RA@MissionIcon.png",
-        "next": ["RelaunchAnchor@RA@RA4-Mission3", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-Mission3", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-MissionIcon3"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-MissionIcon3*40"]
     },
     "RelaunchAnchor@RA@RA4-Mission3": {
         "doc": "步骤 47：OCR 识别 <领袖敌人> 并点击",
@@ -970,7 +1024,8 @@
         "action": "ClickSelf",
         "text": ["领袖", "袖敌", "敌人"],
         "roi": [545, 284, 79, 25],
-        "next": ["RelaunchAnchor@RA@RA4-ConfirmMission3", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmMission3", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-Mission3"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-Mission3*40"]
     },
     "RelaunchAnchor@RA@RA4-ConfirmMission3": {
         "doc": "步骤 48：OCR 识别 <确认> 并点击",
@@ -997,7 +1052,8 @@
         "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
         "next": ["RelaunchAnchor@RA@RA4-UseEWSkill", "#self"],
         "maxTimes": 20,
-        "exceededNext": ["RelaunchAnchor@RA@RA4-Exit"]
+        "exceededNext": ["RelaunchAnchor@RA@RA4-Exit", "RelaunchAnchor@RA@RA4-Gate-RA4-WaitEWSkill"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-WaitEWSkill*40"]
     },
     "RelaunchAnchor@RA@RA4-UseEWSkill": {
         "doc": "步骤 50：OCR 识别 <READY> 后开启EW技能",
@@ -1054,7 +1110,8 @@
     "RelaunchAnchor@RA@RA4-FinishConstruction": {
         "doc": "步骤 54：OCR 识别 <完成建设> 并点击，然后回到步骤 1",
         "baseTask": "RelaunchAnchor@RA@RA1-FinishConstruction",
-        "next": ["RelaunchAnchor@RA@RA4-Prepare", "#self"]
+        "next": ["RelaunchAnchor@RA@RA4-Prepare", "#self", "RelaunchAnchor@RA@RA4-Gate-RA4-FinishConstruction"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-FinishConstruction*40"]
     },
     "RelaunchAnchor@RA@RA4-Exit": {
         "doc": "步骤 50.1：兜底策略，防止EW放不上去,直接撤退",
@@ -1062,7 +1119,8 @@
         "template": "RelaunchAnchor@RA@Exit.png",
         "roi": [10, 20, 100, 90],
         "action": "ClickSelf",
-        "next": ["#self", "RelaunchAnchor@RA@RA4-ExitSettleNow"]
+        "next": ["#self", "RelaunchAnchor@RA@RA4-ExitSettleNow", "RelaunchAnchor@RA@RA4-Gate-RA4-Exit"],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-Exit*40"]
     },
     "RelaunchAnchor@RA@RA4-ExitSettleNow": {
         "doc": "步骤 50.2：OCR 识别 <确认终止> 并点击",
@@ -1551,7 +1609,12 @@
         "text": ["データ", "更新"],
         "roi": [355, 320, 260, 28],
         "specificRect": [630, 481, 21, 21],
-        "next": ["#self", "RelaunchAnchor@RA@RA4-ContinueAfterSettlement"]
+        "next": [
+            "#self",
+            "RelaunchAnchor@RA@RA4-ContinueAfterSettlement",
+            "RelaunchAnchor@RA@RA4-Gate-RA4-DataSyncDismiss"
+        ],
+        "reduceOtherTimes": ["RelaunchAnchor@RA@RA4-Gate-RA4-DataSyncDismiss*40"]
     },
     "RelaunchAnchor@RA@RA4-ClickMission2Done": {
         "doc": "步骤 43.5（OCR 误读兜底）：点掉左侧『已完成但没领取』的任务条目。官方 RA4-ClickMission2 靠 OCR（JP 覆写 [マップ,探索,水場]），而在『已完成』渲染下 OCR 会稳定读成 マツア/マッア/マツラ…（2026-11-02 23:25 连续 13 秒 20 次全是误读，score 0.58~0.80，一次 マップ 都没出现），候选表耗尽 → SubTaskError → 整条 Reclamation 任务链死掉。这里改成模板匹配条目左侧的『已完成勾选框』（30x28；模板自测：命中 0.98~1.00，普通战斗画面 0.18~0.41，阈值 0.85），命中后按官方坐标点条目正文，再回到官方的 RA4-WaitMissionPlot",
@@ -1569,5 +1632,340 @@
         "action": "ClickSelf",
         "text": ["RA4-ABORT-NEVER-MATCHES"],
         "roi": [0, 0, 2, 2]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-Choose": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-Choose.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-Choose 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": [
+            "RelaunchAnchor@RA@RA4-ExamineEWExistence",
+            "RelaunchAnchor@RA@RA4-ExamineEWExistence2",
+            "RelaunchAnchor@RA@RA4-Choose",
+            "#self"
+        ],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ChooseStrategy": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ChooseStrategy.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ChooseStrategy 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-ChooseStrategy", "RelaunchAnchor@RA@RA4-ConfirmSelection", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ChooseType": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ChooseType.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ChooseType 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": [
+            "RelaunchAnchor@RA@RA4-EW1",
+            "RelaunchAnchor@RA@RA4-EW2",
+            "RelaunchAnchor@RA@RA4-EW3",
+            "RelaunchAnchor@RA@RA4-EW4",
+            "RelaunchAnchor@RA@RA4-EW5",
+            "RelaunchAnchor@RA@RA4-EW6",
+            "RelaunchAnchor@RA@RA4-EW7",
+            "RelaunchAnchor@RA@RA4-EW8",
+            "#self"
+        ],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ClickMission": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ClickMission.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ClickMission 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-MissionIcon2", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ClickPlot": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ClickPlot.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ClickPlot 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-ClickPlot", "RelaunchAnchor@RA@RA4-WaitSwipeMap", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmMission": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ConfirmMission.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ConfirmMission 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmMission", "RelaunchAnchor@RA@RA4-ClickMission", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmMission2": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ConfirmMission2.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ConfirmMission2 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": [
+            "RelaunchAnchor@RA@RA4-ConfirmMission2",
+            "RelaunchAnchor@RA@RA4-ClickMission2",
+            "RelaunchAnchor@RA@RA4-ClickMission2Done",
+            "#self"
+        ],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmSelection": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ConfirmSelection.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ConfirmSelection 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-Choose", "RelaunchAnchor@RA@RA4-ConfirmSelection", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmTeam": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ConfirmTeam.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ConfirmTeam 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmTeam2", "RelaunchAnchor@RA@RA4-ConfirmTeam", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ConfirmTeam2": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ConfirmTeam2.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ConfirmTeam2 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": [
+            "RelaunchAnchor@RA@RA4-StartConstruction",
+            "RelaunchAnchor@RA@RA4-ConfirmTeam2",
+            "RelaunchAnchor@RA@RA4-WaitName",
+            "RelaunchAnchor@RA@RA4-DeployGatheringBasePrompt",
+            "#self"
+        ],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-DataSyncDismiss": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-DataSyncDismiss.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-DataSyncDismiss 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-DataSyncDismiss", "RelaunchAnchor@RA@RA4-ContinueAfterSettlement", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-DeployOperatorWait": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-DeployOperatorWait.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-DeployOperatorWait 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-MissionIcon", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-EW-Common": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-EW-Common.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-EW-Common 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-EW-Skill", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-EW-ConfirmHelp": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-EW-ConfirmHelp.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-EW-ConfirmHelp 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmTeam", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-EW-Mod": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-EW-Mod.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-EW-Mod 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-EW-ConfirmHelp", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-Entry": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-Entry.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-Entry 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-Prepare", "RelaunchAnchor@RA@RA4-OpenConstruction", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ExamineEWExistence": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ExamineEWExistence.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ExamineEWExistence 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmTeam", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-ExamineEWExistence2": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-ExamineEWExistence2.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-ExamineEWExistence2 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-AddHelp", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-Exit": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-Exit.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-Exit 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-Exit", "RelaunchAnchor@RA@RA4-ExitSettleNow", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-FinishConstruction": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-FinishConstruction.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-FinishConstruction 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-Prepare", "RelaunchAnchor@RA@RA4-FinishConstruction", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-Mission": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-Mission.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-Mission 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmMission", "RelaunchAnchor@RA@RA4-Mission", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-Mission2": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-Mission2.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-Mission2 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmMission2", "RelaunchAnchor@RA@RA4-Mission2", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-Mission3": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-Mission3.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-Mission3 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-ConfirmMission3", "RelaunchAnchor@RA@RA4-Mission3", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-MissionIcon": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-MissionIcon.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-MissionIcon 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-Mission", "RelaunchAnchor@RA@RA4-MissionIcon", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-MissionIcon2": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-MissionIcon2.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-MissionIcon2 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-Mission2", "RelaunchAnchor@RA@RA4-MissionIcon2", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-MissionIcon3": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-MissionIcon3.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-MissionIcon3 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-Mission3", "RelaunchAnchor@RA@RA4-MissionIcon3", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-MissionPlot": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-MissionPlot.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-MissionPlot 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-MissionIcon3", "RelaunchAnchor@RA@RA4-MissionPlot", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-OpenConstruction": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-OpenConstruction.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-OpenConstruction 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": [
+            "RelaunchAnchor@RA@RA4-ChooseStrategy",
+            "RelaunchAnchor@RA@RA4-OpenConstruction",
+            "RelaunchAnchor@RA@RA4-Prepare",
+            "#self"
+        ],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-Prepare": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-Prepare.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-Prepare 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-OpenConstruction", "RelaunchAnchor@RA@RA4-Prepare", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-SkillPlot": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-SkillPlot.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-SkillPlot 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-UseRedGold", "RelaunchAnchor@RA@RA4-SkillPlot", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-SkillPlot2": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-SkillPlot2.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-SkillPlot2 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-UseRedGold2", "RelaunchAnchor@RA@RA4-SkillPlot2", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-SkillPlot3": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-SkillPlot3.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-SkillPlot3 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-UseRedGold3", "RelaunchAnchor@RA@RA4-SkillPlot3", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-UseRedGold": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-UseRedGold.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-UseRedGold 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot", "RelaunchAnchor@RA@RA4-UseRedGold", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-UseRedGold2": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-UseRedGold2.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-UseRedGold2 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot2", "RelaunchAnchor@RA@RA4-UseRedGold2", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-UseRedGold3": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-UseRedGold3.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-UseRedGold3 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot3", "RelaunchAnchor@RA@RA4-UseRedGold3", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-UseRedPlot2": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-UseRedPlot2.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-UseRedPlot2 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot2", "RelaunchAnchor@RA@RA4-WaitSwipeMap2", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-UseRedPlot3": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-UseRedPlot3.next 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-UseRedPlot3 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-UseRedPlot3", "RelaunchAnchor@RA@RA4-WaitSwipeMap3", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
+    },
+    "RelaunchAnchor@RA@RA4-Gate-RA4-WaitEWSkill": {
+        "doc": "步骤（容错闸门，自动生成）：RA4-WaitEWSkill.exceededNext 的候选表全是识别任务，一次识别失败（OCR 抖动 / 画面切换中 / 本机卡顿）就会重试 20 次然后 SubTaskError 掐掉整条任务链（2026-11-02 23:25:50 实测过一次）。这个 JustReturn 闸门接手兜底：每圈延迟 400ms 重试原来的候选，最多 40 圈（≈20 秒）；仍然识别不到才交给 RA4-AbortUnrecognized 干净地报错停下 —— 宁可停下来让你看见，也不静默空转。计数器是累计的，所以 RA4-WaitEWSkill 每次执行都会把它复位（reduceOtherTimes），保证预算是『每次进入这一步』而不是『整局』—— 2026-11-03 00:00:59 就是漏了这个复位，闸门用满 12 次之后变成地雷（再遇到一次识别失败就直接报错）",
+        "baseTask": "RelaunchAnchor@RA@Common-WaitSkip",
+        "postDelay": 400,
+        "maxTimes": 40,
+        "next": ["RelaunchAnchor@RA@RA4-Exit", "#self"],
+        "exceededNext": ["RelaunchAnchor@RA@RA4-AbortUnrecognized"]
     }
 }
